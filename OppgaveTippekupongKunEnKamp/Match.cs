@@ -3,30 +3,52 @@ namespace OppgaveTippekupongKunEnKamp
 {
     public class Match
     {
-        public int HomeGoals;
-        public int AwayGoals;
-        public string Result => HomeGoals == AwayGoals ? "U" : HomeGoals > AwayGoals ? "H" : "B";
+        private int _homeGoals;
+        private int _awayGoals;
+        private readonly string _bet;
+        public bool IsRunning { get; private set; }
 
-        public Match()
+        public Match(string bet)
         {
-            HomeGoals = 0;
-            AwayGoals = 0;
+            _homeGoals = 0;
+            _awayGoals = 0;
+            _bet = bet;
+            IsRunning = true;
         }
-        public bool IsBetCorrect(string bet)
+        public void AddGoal(bool isHomeTeam)
         {
-            return bet.Contains(Result);
+            if (isHomeTeam) _homeGoals++;
+            else _awayGoals++;
         }
-        public string isBetCorrectText(string? bet)
+
+        public bool IsBetCorrect()
         {
-            if (bet != null && bet.Contains(Result))
+            if (_bet == "U" && _homeGoals == _awayGoals)
             {
-                return "correctly";
+                return true;
+            }
+            else if (_bet == "H" && _homeGoals > _awayGoals)
+            {
+                return true;
+            }
+            else if (_bet == "B" && _awayGoals > _homeGoals)
+            {
+                return true;
             }
             else
             {
-                return "falsely";
+                return false;
             }
+        }
+
+        public void Stop()
+        {
+            IsRunning = false;
+        }
+
+        public string GetScore()
+        {
+            return $"The score is {_homeGoals}-{_awayGoals}.";
         }
     }
 }
-
